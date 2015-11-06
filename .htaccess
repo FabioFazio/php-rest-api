@@ -1,0 +1,20 @@
+Options -Indexes
+
+AuthType Basic
+AuthName "Secure API"
+AuthBasicProvider file
+AuthUserFile /home/fabio/public_html/api/.htpasswd
+Require valid-user
+
+<IfModule mod_rewrite.c>
+	Options +FollowSymlinks
+	Options +SymLinksIfOwnerMatch
+
+	RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteBase /~fabio/api
+		
+	RewriteRule ^(.+)/(.*)/(.*) $1/api.php?entity=$2&action=$3 [QSA,NC,L]
+	RewriteRule (.+)/(.*) $1/api.php?entity=$2 [QSA,NC,L]
+</IfModule>
