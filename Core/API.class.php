@@ -39,7 +39,7 @@ abstract class API
      */
     protected $file = Null;
 
-    static protected $_documentation = Null;
+    static protected $_config = Null;
 
     /**
      * Constructor: __construct
@@ -91,12 +91,40 @@ abstract class API
      */
     public function processAPI() {
         if (method_exists($this, $this->endpoint)) {
+            // run all checks defined in config
+            if ($config = self::$_config) {
+                $name = $this->endpoint;
+                $options = !(array_key_exists('service', $config) && array_key_exists('actions', $config['service'])) ?
+                        false :  current ( array_filter ($config['service']['actions'],
+                                    function ($elem) use ($name) {return $elem['name']==$name;}));
+                if ($options) {
+                    if (array_key_exists('method', $options) &&
+                            strtoupper($options['method']) != strtoupper($this->method)) {
+                        throw new \Exception("Only accepts ".strtoupper($options['method'])." requests", 405);
+                    }
+                    $required = []; $badFormat = [];
+                    foreach ($options['input'] as $name => $filters) {
+                         if (array_key_exists('required', $filters) && $filters['required'] &&
+                                !array_key_exists($name, $this->request)){
+                            $required[] = $name;
+                        }
+                         if (array_key_exists('regexp', $filters) && $filters['regexp'] &&
+                                array_key_exists($name, $this->request) &&
+                                !preg_match($filters['regexp'], $this->request[$name])){
+                            $badFormat[] = $name;
+                        }
+                    }
+                    if (!empty($required) || !empty($badFormat)) {
+                        $this->badRequest($required, $badFormat);
+                    }
+                }
+            }
             return $this->_response($this->{$this->endpoint}($this->args));
         }
 	if ($this->endpoint) {
 	    return $this->_response(["error"=>"No Endpoint: $this->endpoint"], 404);
 	} else {
-	    return $this->documentation();
+	    return $this->_response($this->documentation());
 	}
     }
 
@@ -145,7 +173,7 @@ abstract class API
            $msgRequired = "Input fields required are '" . implode("', '", $required) . "'";
        }
        if(!empty($badFormat)){
-           $msgBadFormat = "Wrong format for input fields '" . implode("', '", $required) . "'";
+           $msgBadFormat = "Wrong format for input fields '" . implode("', '", $badFormat) . "'";
        }
        $description = $msgRequired? $msgRequired : $msgBadFormat;
        $message = "Bad Request";
@@ -171,8 +199,8 @@ abstract class API
        return self::_response(["error"=>$message], 503);
    }
 
-   static public function documentation () {
-	return self::_response(self::$_documentation);
+   static protected function documentation () {
+	return ['documentation'=>self::$_config];
    }
    
    abstract function defaultResponce();

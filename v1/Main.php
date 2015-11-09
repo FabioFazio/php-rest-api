@@ -18,16 +18,14 @@ class Main extends Core\API
     
     public function __construct($request, $origin) {
         parent::__construct($request);
-	parent::$_documentation = [
-		'a'=>'1'
-	];
+        $file = join('', array_slice(explode('\\', __CLASS__), -1)).'.config.php';
+        parent::$_config = require $file;
 
         $box = new Models\Box();
 
 	if (false && $apiKeyEvaluation) //TODO
 	{
-            // Prevent CSRF attacks evaluating if apiKey is active for specific
-            // Origin source
+            // Prevent CSRF attacks evaluating if apiKey is active for $origin
             $APIKey = new Models\APIKey();
             if (!array_key_exists('apiKey', $this->request)) {
             // if API version lacks
@@ -45,33 +43,15 @@ class Main extends Core\API
      protected function example() {
 
         $box = new Models\Box();
-
-        if ($this->method == 'GET') {
-            $required = []; $badFormat = [];
-            foreach(['token'] as $field) {
-		if (!array_key_exists($field, $this->request)) {
-		   $required[] = $field;
-                } elseif ($this->request[$field] == '0') {
-                    //TODO use regexp
-                   $badFormat[] = $field;
-                }
-	    }
-            if (!empty($required) || !empty($badFormat)) {
-                $this->badRequest($required, $badFormat);
-            }
-            
-	    if (!$box->get('token', $this->request['token'])) {
-		$this->badRequest();
-	    }
-            $this->box = $box;
-            return "Your box content is " . $this->box->get('content');
-        } else {
-            return "Only accepts GET requests";
+        if (!$box->get('token', $this->request['token'])) {
+            return [];
         }
+        $this->box = $box;
+        return ["message" => "Your box content is " . $this->box->get('content')];
      }
      
      function defaultResponce () {
-         return $this->documentation();
+         return self::documentation();
      }
  }
 ?>

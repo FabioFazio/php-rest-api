@@ -13,7 +13,7 @@ class Session extends Core\API
     
     public function __construct($request, $origin) {
         parent::__construct($request);
-        parent::$_documentation = [
+        parent::$_settings = [
             'signin'=>'',
             'signout'=>'',
             'signup'=>'',
@@ -34,11 +34,14 @@ class Session extends Core\API
 		}
 	    }
             $session = new Models\Session();
-            if (array_key_exists('secret', $this->request) &&
-                !$session->get('secret', $this->request['secret'])) {
-            // if token lacks or doesn't grant an authenticated session
-                throw new \Exception('Session not available');
-            }
+            
+            
+            
+//            if (array_key_exists('secret', $this->request) &&
+//                !$session->get('secret', $this->request['secret'])) {
+//            // if token lacks or doesn't grant an authenticated session
+//                throw new \Exception('Session not available');
+//            }
 
             // Initialize the user
             $this->session = $session;
