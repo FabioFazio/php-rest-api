@@ -6,8 +6,12 @@ use API\Models as Models;
 
 require_once '../Core/API.class.php';
 require_once '../Models/APIKey.class.php';
-require_once '../Models/Box.class.php';
+require_once '../Models/Box.class.php'; // An example of model used for exercice
 
+/**
+ * Main Class is required in any version of API and will manage default behaviour
+ * and wrong entity requirest
+ */
 class Main extends Core\API
 {
     protected $box;
@@ -20,8 +24,10 @@ class Main extends Core\API
 
         $box = new Models\Box();
 
-	if (false && $apiKeyEvaluation) //TODO prevent attacks with CSR
+	if (false && $apiKeyEvaluation) //TODO
 	{
+            // Prevent CSRF attacks evaluating if apiKey is active for specific
+            // Origin source
             $APIKey = new Models\APIKey();
             if (!array_key_exists('apiKey', $this->request)) {
             // if API version lacks

@@ -152,7 +152,13 @@ abstract class API
        $message .= $description?": $description":"";
        throw new \Exception($message, 400);
    }
-    
+
+   /**
+    * Send an error response
+    * @param type $message
+    * @param type $code
+    * @return type
+    */
    static public function error ($message, $code = 0) {
        if ($code)
            return self::_response(["error"=>$message], $code);
