@@ -24,7 +24,7 @@ if ($entity && file_exists($entity.'.php')){
 	exit($class::serviceUnavaiable($entity));
 }
 try {
-    $action = 'default';
+    $action = 'defaultResponce';
     if (array_key_exists('action', $_REQUEST) && !empty($_REQUEST['action'])) {
 	$action = $_REQUEST['action'];
     }

@@ -168,5 +168,7 @@ abstract class API
    static public function documentation () {
 	return self::_response(self::$_documentation);
    }
+   
+   abstract function defaultResponce();
 }
 ?>

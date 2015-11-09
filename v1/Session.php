@@ -52,5 +52,9 @@ class Session extends Core\API
 		return "Only accepts POST requests";
         }
      }
+     
+    function defaultResponce () {
+         return $this->documentation();
+     }
  }
 ?>

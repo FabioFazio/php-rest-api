@@ -63,5 +63,9 @@ class Main extends Core\API
             return "Only accepts GET requests";
         }
      }
+     
+     function defaultResponce () {
+         return $this->documentation();
+     }
  }
 ?>
