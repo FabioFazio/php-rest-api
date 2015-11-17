@@ -38,5 +38,6 @@ try {
 } catch (\Exception $e) {
     // any exception is an http response error
     exit($class::error($e->getMessage(),$e->getCode()));
+    //die(sprintf('<pre>%s</pre>',print_r($var,1)));
 }
 ?>
