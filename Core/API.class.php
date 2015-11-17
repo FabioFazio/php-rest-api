@@ -68,19 +68,21 @@ abstract class API
         }
 
         switch($this->method) {
-        case 'DELETE':
-        case 'POST':
-            $this->request = $this->_cleanInputs($_POST);
-            break;
         case 'GET':
             $this->request = $this->_cleanInputs($_GET);
             break;
+        case 'POST':
+            $this->request = $this->_cleanInputs($_POST);
+            $this->get = $this->_cleanInputs($_GET);
+            break;
         case 'PUT':
-            $this->request = $this->_cleanInputs($_GET);
+        case 'DELETE':
             $this->file = file_get_contents("php://input");
+            parse_str($this->file, $this->request);
+            $this->get = $this->_cleanInputs($_GET);
             break;
         default:
-            $this->_response('Invalid Method', 405);
+            $this->_response(["error"=>"Invalid Method"], 405);
             break;
         }
     }
@@ -157,11 +159,14 @@ abstract class API
     private static function _requestStatus($code) {
         $status = array(  
             200 => 'OK',
-            400 => 'Bad Request',   
-            404 => 'Not Found',   
-            405 => 'Method Not Allowed',
-            500 => 'Internal Server Error',
-	    503 => 'Service unavailable'
+            201 => 'Created',
+            406 => 'Not acceptable', // a feedback explain unexpected result
+            400 => 'Bad Request', // Input wrong
+            401 => 'Unauthorized', // Session expired or malicious requests
+            404 => 'Not Found',  // (actually not used)
+            405 => 'Method Not Allowed', // Protocol Method unused
+            500 => 'Internal Server Error', // Generic Error
+	    503 => 'Service unavailable' // Unavailable or not implemented
         ); 
         return ($status[$code])?$status[$code]:$status[500];
     }
@@ -182,16 +187,22 @@ abstract class API
    }
 
    /**
-    * Send an error response
+    * Send response without a result but with a description
     * @param type $message
     * @param type $code
     * @return type
     */
-   static public function error ($message, $code = 0) {
-       if ($code)
-           return self::_response(["error"=>$message], $code);
-       else
-           return self::_response(["error"=>"Internal Server Error: '$message'"], 500);
+   static public function error ($message = '', $code = 0) {
+       if (!$message)
+           return self::_response(null, 500);
+       switch ($code) {
+                case 0:
+                    return self::_response(["error" => "Internal Server Error: '$message'"], 500);                    
+                case 406:
+                    return self::_response(["feedback" => $message], $code);
+                default:
+                    return self::_response(["error" => "Internal Server Error: '$message'"], 500);
+       }
    }
 
    static public function serviceUnavaiable ($service) {
