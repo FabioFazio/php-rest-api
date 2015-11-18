@@ -75,7 +75,60 @@ return [
             [
                 'name'=>'signup',
                 'method'=>'POST',
-                'descritpion'=>'Generate a new user',
+                'descritpion'=>'Public requests to generate a new user',
+                'input'=>[
+                    'name'=>[
+                        'required'  => true,
+                        'regexp'    => '/^.*$/'
+                    ],
+                    'surname'=>[
+                        'required'  => true,
+                        'regexp'    => '/^.*$/'
+                    ],
+                    'email'=>[
+                        'required'  => true,
+                        'regexp'    => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/'
+                    ],
+                    'language'=>[
+                        'required'  => true,
+                        'regexp'    => '/^it|en$/'
+                    ],
+                    'sex'=>[
+                        'required' => true,
+                        'regexp'    => '/^m|f$/'
+                    ],
+                    'idprivacy'=>[
+                        'required'  => true,
+                        'regexp'    => '/^1$/'
+                    ],
+                    'captcha'=>[
+                        'required'  => true, // array(input,id)
+                    ],
+                ],
+                'output'=>[
+                    'error'=>
+                        // red alert
+                        'Error description (exists if http != 200 )',
+                    'feedback'=>
+                        // yellow alert if http != 200 / green otherwise
+                        'Feedback message to display',
+                    'data'=>
+                        'result object',
+                ],
+            ],
+                        [
+                'name'=>'catcha',
+                'method'=>'GET',
+                'descritpion'=>'Requests to generate a new registration catcha',
+                'input'=>[
+                ],
+                'output'=>[
+                    'error'=>
+                        // red alert
+                        'Error description (exists if http != 200 )',
+                    'data'=>
+                        'result object with [ captha, path ]',
+                ],
             ],
             [
                 'name'=>'recover',
