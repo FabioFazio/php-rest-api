@@ -18,7 +18,7 @@ class Main extends Core\API
     
     public function __construct($request, $origin) {
         parent::__construct($request);
-        $file = join('', array_slice(explode('\\', __CLASS__), -1)).'.config.php';
+        $file = CONFIG_PATH.join('', array_slice(explode('\\', __CLASS__), -1)).'.config.php';
         parent::$_config = require $file;
 
         $box = new Models\Box();

@@ -13,7 +13,7 @@ class Session extends Core\API
     
     public function __construct($request, $origin) {
         parent::__construct($request);
-        $file = join('', array_slice(explode('\\', __CLASS__), -1)).'.config.php';
+        $file = CONFIG_PATH .join('', array_slice(explode('\\', __CLASS__), -1)).'.config.php';
         parent::$_config = require $file;
         
         $this->session = new Models\Session();
@@ -96,24 +96,24 @@ class Session extends Core\API
         throw new \Exception(current($errors),406);
     }
 
+    /**
+     * 
+     * @return type
+     * @throws \Exception
+     */
     public function signup() {
-        $register = new \Mainsim_Model_Registration(null, BACKEND_ROOTPATH . DIRECTORY_SEPARATOR);
-        $result = $register->newUser($this->request);
-        if($result['code'] == 'OK'){
-            return $result;
+        if($this->session->checkCaptcha($this->request['captcha']))
+        {
+            $result = $this->session->signup($this->request);
         }else{
-            $wRegcf = $register->Regcf;
-            $postData = $this->request;
-            $language = 1;//$register->get_language();
-            $dictionary = 1;//$register->get_translations($this->view->language);
-            $message = $result['message'];
+            throw new \Exception("Wrong captcha text. Please try again!", 400);
         }
-        throw new \Exception( $message , 406 );
+        return ['data' => $result];
     }
     
-    public function catcha() {
+    public function captcha() {
         $result = $this->session->getCaptcha();
-        return $result;
+        return ['data' => $result];
     }
  }
 ?>

@@ -166,7 +166,48 @@ class Session extends MainsimModel {
         $register = new \Mainsim_Model_Registration(null, BACKEND_ROOTPATH . DIRECTORY_SEPARATOR);
         $secret = $register->createCaptcha();
         $path = BACKEND_ROOTWEB . '/' . $register->captchaDir;
-        return ['data' => ['captcha' => $secret, 'path' => $path ]];
+        return ['captcha' => $secret, 'path' => $path ];
+    }
+    
+    public function checkCaptcha($captcha){
+        $register = new \Mainsim_Model_Registration(null, BACKEND_ROOTPATH . DIRECTORY_SEPARATOR);
+        return $register->checkCaptcha($captcha);
+    }
+    
+    public function signup($request){
+        $register = new \Mainsim_Model_Registration(null, BACKEND_ROOTPATH . DIRECTORY_SEPARATOR);
+    
+        $params = require CONFIG_PATH . DIRECTORY_SEPARATOR. 'defaultUser.config.php';
+        $username = $prefix = $request['name']. '.' .$request['surname'];
+        $count = 0;
+        $login = new \Mainsim_Model_Login();
+        
+        while($login->userExists($username)){
+            $username = $prefix.'.'.$count++;
+        }
+        
+        $params['fc_usr_firstname'] = $request['name'];
+        $params['fc_usr_lastname'] = $request['surname'];
+        $params['f_title'] = $request['name'].' '.$request['surname'];
+        $params['fc_usr_gender'] = '0';                     // force male
+        $params['fc_usr_address'] = '';                     // empty
+	$params['fc_usr_phone'] = '';                       // empty
+        $params['fc_usr_mail'] = $request['email'];
+        $params['fc_usr_usn'] = $username;
+        $params['fc_usr_password'] = $request['password'];
+        $params['fc_usr_repeat_pwd'] = $request['password'];
+        $params['fc_usr_language'] = '2';                   // force italian
+        $params['fc_usr_language_str'] = 'Italian';         // force italian
+        $params['fc_usr_level'] = 64;                       // default
+        $params['fc_usr_level_text'] = 'Supervisor PRO';    // default
+	$params['fc_usr_pwd_registration'] = time();        // timestamp
+
+        $wares = new \Mainsim_Model_Wares();
+        $result = array();
+        $this->triggerNotice(0);
+        $result = $wares->newWares($params, [], true, true);
+        $this->triggerNotice(1);
+        return $result;
     }
 }
 ?>

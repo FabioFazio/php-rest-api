@@ -8,6 +8,8 @@
  */
 namespace API\Core;
 
+define('CONFIG_PATH','config/');
+
 abstract class API
 {
     /**

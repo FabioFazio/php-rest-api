@@ -5,7 +5,8 @@ $default = 'Main';
 $action = 'defaultResponce';
 require_once $default.'.php';
 
-//var_dump(['_REQUEST'=>$_REQUEST]+['_SERVER'=>$_SERVER]);die();
+define('ROOT_PATH', dirname(__DIR__));
+//die(sprintf('<pre>%s</pre>',print_r(['_REQUEST'=>$_REQUEST]+['_SERVER'=>$_SERVER],1)));
 
 // Requests from the same server don't have a HTTP_ORIGIN header
 // HTTP_ORIGIN is a way to protect against CSRF (Cross Site Request Forgery) requests

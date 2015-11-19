@@ -29,5 +29,16 @@ abstract class MainsimModel {
             }
             return self::$_app;
         }
+        
+        /**
+         * Uniforming to Mainsim Backend eNotice should be disabled to works 
+         * properly. Deprecated
+         * @param bool $active if active trigger them, false otherwise
+         */
+        function triggerNotice ($active = true)
+        {
+            $error = $active? E_ALL : E_ALL & ~E_NOTICE;
+            error_reporting($error);
+        }
 }
 ?>

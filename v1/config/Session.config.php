@@ -90,12 +90,16 @@ return [
                         'regexp'    => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/'
                     ],
                     'language'=>[
+                        'required'  => false,
+                        'regexp'    => '/^\\d+$/'
+                    ],
+                    'password'=>[
                         'required'  => true,
-                        'regexp'    => '/^it|en$/'
+                        'regexp'    => '/^.{5,}$/'
                     ],
                     'sex'=>[
-                        'required' => true,
-                        'regexp'    => '/^m|f$/'
+                        'required' => false,
+                        'regexp'    => '/^0|1$/'
                     ],
                     'idprivacy'=>[
                         'required'  => true,
@@ -117,9 +121,9 @@ return [
                 ],
             ],
                         [
-                'name'=>'catcha',
+                'name'=>'captcha',
                 'method'=>'GET',
-                'descritpion'=>'Requests to generate a new registration catcha',
+                'descritpion'=>'Requests to generate a new registration captcha',
                 'input'=>[
                 ],
                 'output'=>[
