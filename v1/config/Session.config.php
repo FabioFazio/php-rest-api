@@ -19,19 +19,13 @@ return [
                     ]
                 ],
                 'output'=>[
-                    'error'=>
-                        // red alert
-                        'Error description (exists if http != 200 )',
                     'feedback'=>
-                        // yellow alert if http != 200 / green otherwise
-                        'Feedback message to display',
-                    'data'=>
-                        'result object with session metadata',
-                    'secret'=>
-                        'session key (exists if http = 200 )'
+                        'optional output defined as object of strings {error,warning,info,success}',
+                    'data'=>[
+                        'secret'=> 'session key (exists if http = 200 )'
+                    ],
                 ],
-            ],
-            [
+            ],[
                 'name'=>'get',
                 'method'=>'GET',
                 'descritpion'=>'Get full session dataset',
@@ -42,17 +36,13 @@ return [
                     ],
                 ],
                 'output'=>[
-                    'error'=>
-                        // red alert
-                        'Error description (exists if http != 200 )',
                     'feedback'=>
-                        // yellow alert if http != 200 / green otherwise
-                        'Feedback message to display',
-                    'data'=>
-                        'result object with session metadata',
+                        'optional output defined as object of strings {error,warning,info,success}',
+                    'data'=>[
+                        'session' => 'session obj (exists if http = 200 )'
+                    ],
                 ],
-            ],
-            [
+            ],[
                 'name'=>'signout',
                 'method'=>'DELETE',
                 'descritpion'=>'Delete current session',
@@ -63,16 +53,10 @@ return [
                     ],
                 ],
                 'output'=>[
-                    'error'=> // red alert
-                        'Error description (exists if http != 200 )',
                     'feedback'=>
-                        // yellow alert if http != 200 / green otherwise
-                        'Feedback message to display',
-                    'data'=>
-                        'result object with session metadata',
+                        'optional output defined as object of strings {error,warning,info,success}',
                 ],
-            ],
-            [
+            ],[
                 'name'=>'signup',
                 'method'=>'POST',
                 'descritpion'=>'Public requests to generate a new user',
@@ -110,31 +94,24 @@ return [
                     ],
                 ],
                 'output'=>[
-                    'error'=>
-                        // red alert
-                        'Error description (exists if http != 200 )',
                     'feedback'=>
-                        // yellow alert if http != 200 / green otherwise
-                        'Feedback message to display',
-                    'data'=>
-                        'result object',
+                        'optional output defined as object of strings {error,warning,info,success}',
                 ],
-            ],
-                        [
+            ],[
                 'name'=>'captcha',
                 'method'=>'GET',
                 'descritpion'=>'Requests to generate a new registration captcha',
                 'input'=>[
                 ],
                 'output'=>[
-                    'error'=>
-                        // red alert
-                        'Error description (exists if http != 200 )',
-                    'data'=>
-                        'result object with [ captha, path ]',
+                    'feedback'=>
+                        'optional output defined as object of strings {error,warning,info,success}',
+                    'data'=>[
+                        'captcha' => 'captcha code',
+                        'path' => 'url path to png file',
+                    ],
                 ],
-            ],
-            [
+            ],[
                 'name'=>'recover',
                 'method'=>'PUT',
                 'descritpion'=>'Recover lost credentials',
@@ -149,11 +126,8 @@ return [
                     ],
                 ],
                 'output'=>[
-                    'error'=> // red alert
-                        'Error description (exists if http != 200 )',
                     'feedback'=>
-                        // yellow alert if http != 200 / green otherwise
-                        'Feedback message to display',
+                        'optional output defined as object of strings {error,warning,info,success}',
                 ],
 
             ],

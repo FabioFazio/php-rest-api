@@ -84,7 +84,7 @@ abstract class API
             $this->get = $this->_cleanInputs($_GET);
             break;
         default:
-            $this->_response(["error"=>"Invalid Method"], 405);
+            $this->_response(["feedback"=>["error"=>"Invalid Method"]], 405);
             break;
         }
     }
@@ -126,7 +126,7 @@ abstract class API
             return $this->_response($this->{$this->endpoint}($this->args));
         }
 	if ($this->endpoint) {
-	    return $this->_response(["error"=>"No Endpoint: $this->endpoint"], 404);
+	    return $this->_response(["feedback"=>["error"=>"No Endpoint: $this->endpoint"]], 404);
 	} else {
 	    return $this->_response($this->documentation());
 	}
@@ -196,20 +196,20 @@ abstract class API
     */
    static public function error ($message = '', $code = 0) {
        if (!$message)
-           return self::_response(null, 500);
+           return self::_response([], 500);
        switch ($code) {
                 case 0:
-                    return self::_response(["error" => "Internal Server Error: '$message'"], 500);                    
+                    return self::_response(["feedback"=>["error" => "Internal Server Error: '$message'"]], 500);                    
                 case 406:
-                    return self::_response(["feedback" => $message], $code);
+                    return self::_response(["feedback"=>["warning" => $message]], $code);
                 default:
-                    return self::_response(["error" => "Internal Server Error: '$message'"], 500);
+                    return self::_response(["feedback"=>["error" => "Internal Server Error: '$message'"]], 500);
        }
    }
 
    static public function serviceUnavaiable ($service) {
        $message = $service?"Service '$service' not implemented":"Service not implemented";
-       return self::_response(["error"=>$message], 503);
+       return self::_response(["feedback"=>["error"=>$message]], 503);
    }
 
    static protected function documentation () {

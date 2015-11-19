@@ -52,7 +52,10 @@ class Session extends Core\API
                     break;
             }
         }
-        return ["feedback"=>"Welcome!"];
+        return [
+            "feedback"  =>["success"=>"Welcome!"],
+            "secret"    =>$auth_res,
+        ];
      }
      
      /**
@@ -61,12 +64,12 @@ class Session extends Core\API
       * @throws \Exception if something go wrong
       */
      protected function get() {
-        $data = $this->session->get();
-        if (empty($data)){
+        
+        $session = $this->session->get();
+        if (empty($session)){
             throw new \Exception("No session available", 406);
-        } else {
-            return [ 'data' => $data ];
         }
+        return [ "session" => $session ];
      }
     
     /**
@@ -76,7 +79,7 @@ class Session extends Core\API
 
         if ($this->session->delete())
         {
-            return ["feedback"=>"Bye Bye!"];
+            return ["feedback"=>["success"=>"Bye Bye!"]];
         } else {
             throw new \Exception(); 
         }
@@ -88,9 +91,10 @@ class Session extends Core\API
      * @throws \Exception
      */
     public function recover() {
+        
         $errors = $this->session->recover($this->request['username'],$this->request['email']);
         if(empty($errors)) {
-            return ["feedback" => "An email has been sent to " . $this->request['email']];
+            return ["feedback" =>["success" => "An email has been sent to " . $this->request['email']]];
         }
         //die(sprintf('<pre>%s</pre>',print_r($errors,1)));
         throw new \Exception(current($errors),406);
@@ -102,18 +106,20 @@ class Session extends Core\API
      * @throws \Exception
      */
     public function signup() {
+        
         if($this->session->checkCaptcha($this->request['captcha']))
         {
             $result = $this->session->signup($this->request);
         }else{
             throw new \Exception("Wrong captcha text. Please try again!", 400);
         }
-        return ['data' => $result];
+        return ['code' => $result];
     }
     
     public function captcha() {
+        
         $result = $this->session->getCaptcha();
-        return ['data' => $result];
+        return $result;
     }
  }
 ?>
