@@ -3,7 +3,7 @@ Options -Indexes
 AuthType Basic
 AuthName "Secure API"
 AuthBasicProvider file
-AuthUserFile /home/fabio/public_html/api/.htpasswd
+AuthUserFile /var/www/api/.htpasswd
 Require valid-user
 
 <IfModule mod_rewrite.c>
