@@ -71,16 +71,26 @@ abstract class API
 
         switch($this->method) {
         case 'GET':
-            $this->request = $this->_cleanInputs($_GET);
+            $this->file = file_get_contents("php://input");
+            $this->get = $this->_cleanInputs($_GET);
+            $this->request = ($this->get)? $this->get : 
+                    $this->_cleanInputs(json_decode($this->file,1));
+            $this->request = $this->_cleanInputs($this->request);
             break;
         case 'POST':
-            $this->request = $this->_cleanInputs($_POST);
+            $this->file = file_get_contents("php://input");
+            $this->post = $this->_cleanInputs($_POST);
             $this->get = $this->_cleanInputs($_GET);
+            $this->request = ($this->post)? $this->post : 
+                    $this->_cleanInputs(json_decode($this->file,1));
             break;
         case 'PUT':
         case 'DELETE':
             $this->file = file_get_contents("php://input");
             parse_str($this->file, $this->request);
+            $this->request = (!is_array($this->request))?
+                    json_decode($this->file,1) : $this->request;
+            $this->request = $this->_cleanInputs($this->request);
             $this->get = $this->_cleanInputs($_GET);
             break;
         default:
@@ -198,8 +208,8 @@ abstract class API
        if (!$message)
            return self::_response([], 500);
        switch ($code) {
-                case 0:
-                    return self::_response(["feedback"=>["error" => "Internal Server Error: '$message'"]], 500);                    
+                case 200:
+                    return self::_response(["feedback"=>["error" => $message]], 200);                    
                 case 406:
                     return self::_response(["feedback"=>["warning" => $message]], $code);
                 default:
