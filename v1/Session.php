@@ -39,10 +39,10 @@ class Session extends Core\API
             switch ($auth_res) {
                 case -3: 
                 case -1:
-                    throw new \Exception("Incorrect username or password", 400);
+                    throw new \Exception("Incorrect username or password", 200);
                     break;
                 case 'DOUBLE_LOGIN':
-                    throw new \Exception("mainsim session already open", 406);
+                    throw new \Exception("mainsim session already open", 200);
                     break;
                 case -100 :
                     throw new \Exception("Application under maintenance. Please retry later", 503);
@@ -54,7 +54,7 @@ class Session extends Core\API
         }
         return [
             "feedback"  =>["success"=>"Welcome!"],
-            "secret"    =>$auth_res,
+            "result" =>["secret"    =>$auth_res],
         ];
      }
      
@@ -69,7 +69,9 @@ class Session extends Core\API
         if (empty($session)){
             throw new \Exception("No session available", 406);
         }
-        return [ "session" => $session ];
+        return [
+            "result" =>["session" => $session ]
+        ];
      }
     
     /**
@@ -109,17 +111,17 @@ class Session extends Core\API
         
         if($this->session->checkCaptcha($this->request['captcha']))
         {
-            $result = $this->session->signup($this->request);
+            $code = $this->session->signup($this->request);
         }else{
             throw new \Exception("Wrong captcha text. Please try again!", 400);
         }
-        return ['code' => $result];
+        return ["result" =>['code' => $code]];
     }
     
     public function captcha() {
         
         $result = $this->session->getCaptcha();
-        return $result;
+        return ["result" =>$result];
     }
  }
 ?>

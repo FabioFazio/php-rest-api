@@ -21,7 +21,7 @@ return [
                 'output'=>[
                     'feedback'=>
                         'optional output defined as object of strings {error,warning,info,success}',
-                    'data'=>[
+                    'result'=>[
                         'secret'=> 'session key (exists if http = 200 )'
                     ],
                 ],
@@ -38,7 +38,7 @@ return [
                 'output'=>[
                     'feedback'=>
                         'optional output defined as object of strings {error,warning,info,success}',
-                    'data'=>[
+                    'result'=>[
                         'session' => 'session obj (exists if http = 200 )'
                     ],
                 ],
@@ -106,7 +106,7 @@ return [
                 'output'=>[
                     'feedback'=>
                         'optional output defined as object of strings {error,warning,info,success}',
-                    'data'=>[
+                    'result'=>[
                         'captcha' => 'captcha code',
                         'path' => 'url path to png file',
                     ],
