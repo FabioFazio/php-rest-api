@@ -88,8 +88,8 @@ abstract class API
         case 'DELETE':
             $this->file = file_get_contents("php://input");
             parse_str($this->file, $this->request);
-            $this->request = (!is_array($this->request))?
-                    json_decode($this->file,1) : $this->request;
+            $request = json_decode($this->file,1);
+            $this->request = (json_last_error() == JSON_ERROR_NONE)?$request:$this->request;
             $this->request = $this->_cleanInputs($this->request);
             $this->get = $this->_cleanInputs($_GET);
             break;
