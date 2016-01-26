@@ -121,8 +121,9 @@ abstract class API
                          if (array_key_exists('required', $filters) && $filters['required'] &&
                                 !array_key_exists($name, $this->request)){
                             $required[] = $name;
-                        }
-                         if (array_key_exists('regexp', $filters) && $filters['regexp'] &&
+                        } 
+                        
+                         if ($this->request && array_key_exists('regexp', $filters) && $filters['regexp'] &&
                                 array_key_exists($name, $this->request) &&
                                 !preg_match($filters['regexp'], $this->request[$name])){
                             $badFormat[] = $name;
